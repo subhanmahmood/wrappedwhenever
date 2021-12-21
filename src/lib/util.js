@@ -1,13 +1,12 @@
 import axios from 'axios'
 export function generateAuthURL(spotifyCredentials, redirectPath) {
+
     let redirect_uri = "";
     if (process.env.NODE_ENV === 'production') {
-        redirect_uri = `https://www.wrappedwhenever.com/${redirectPath}`;
+        redirect_uri = `${window.location.href}${redirectPath}`;
     } else {
         redirect_uri = `http://localhost:3000/${redirectPath}`;
     }
-
-    console.log(redirect_uri)
 
     var url = 'https://accounts.spotify.com/authorize';
     url += '?response_type=token';
