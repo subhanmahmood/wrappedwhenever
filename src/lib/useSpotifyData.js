@@ -2,6 +2,26 @@ import { useEffect, useState } from 'react'
 import { useQuery } from './useQuery'
 import { generateRequestData } from './spotifyRequests'
 
+const removeExtraTrackAttributes = (tracks) => {
+    return tracks.map(({ available_markets, disc_number, duration_ms, external_ids, external_urls, preview_url, track_number, album, artists, ...rest }) => {
+        return {
+            image: typeof album.images[0] !== 'undefined' ? album.images[0].url : 'none',
+            albumName: album.name,
+            artist: artists[0].name,
+            ...rest
+        }
+    })
+}
+
+const removeExtraArtistAttributes = (artists) => {
+    return artists.map(({ external_urls, uri, images, ...rest }) => {
+        return {
+            image: images[0].url,
+            ...rest
+        }
+    })
+}
+
 export const useSpotifyData = (accessToken) => {
     const requests = generateRequestData(accessToken)
 
@@ -40,16 +60,16 @@ export const useSpotifyData = (accessToken) => {
         if (isUserDataLoading && isShortTermTracksLoading && isMediumTermTracksLoading && isLongTermTracksLoading && isShortTermArtistsLoading && isMediumTermArtistsLoading && isLongTermArtistsLoading) {
             let updatedData = Object.assign(data)
             updatedData.short_term = {
-                tracks: shortTermTracks,
-                artists: shortTermArtists,
+                tracks: removeExtraTrackAttributes(shortTermTracks.items),
+                artists: removeExtraArtistAttributes(shortTermArtists.items),
             }
             updatedData.medium_term = {
-                tracks: mediumTermTracks,
-                artists: mediumTermArtists,
+                tracks: removeExtraTrackAttributes(mediumTermTracks.items),
+                artists: removeExtraArtistAttributes(mediumTermArtists.items),
             }
             updatedData.long_term = {
-                tracks: longTermTracks,
-                artists: longTermArtists,
+                tracks: removeExtraTrackAttributes(longTermTracks.items),
+                artists: removeExtraArtistAttributes(longTermArtists.items),
             }
             setData(updatedData)
         }
