@@ -80,7 +80,7 @@ export default function Wrapped() {
                                 </div>
                             </div>
                             <div className="w-full flex-1 flex flex-col md:w-9/12 md:mx-auto bg-white overflow-scroll mb-0 no-scrollbar" style={{ scrollPadding: 'auto' }}>
-                                <div className="flex-grow">
+                                <div className="h-screen flex flex-col">
                                     <div className="flex flex-row sticky top-0 bg-white z-10 border-b border-gray-100">
                                         {
                                             Object.keys(terms).map((term, i) => {
@@ -96,29 +96,31 @@ export default function Wrapped() {
                                             })
                                         }
                                     </div>
-                                    {
-                                        data[resources[currentResource].label][Object.keys(terms)[termCount]].map((track, i) => {
-                                            return <Item data={track} i={i} key={i} />
-                                        })
-                                    }
+                                    <div className="flex-1 flex flex-col overflow-y-auto">
+                                        {
+                                            data[resources[currentResource].label][Object.keys(terms)[termCount]].map((track, i) => {
+                                                return <Item data={track} i={i} key={i} />
+                                            })
+                                        }
+                                    </div>
                                 </div>
                                 <AnimatePresence>
                                     {
                                         resources[currentResource].label === 'tracks' &&
                                         <motion.div
-                                            className="flex flex-col sticky bottom-0"
+                                            className="flex flex-col fixed bottom-16 md:sticky md:bottom-0 w-full"
                                             initial={{ y: 30, opacity: 0 }}
                                             animate={{ y: 0, opacity: 1 }}
                                             exit={{ y: 50, opacity: 0 }}
                                         >
                                             <div className="hidden md:flex h-16 bg-gradient-to-t from-gray-100 to-transparent"></div>
-                                            <div className="flex-grow flex flex-row items-center justify-center px-6 py-4 border-t-2 border-gray-100 bg-white">
+                                            <div className="flex-grow flex flex-row items-center justify-center px-6 py-4 md:border-t-2 border-gray-100 bg-transparent md:bg-white">
                                                 <div className="flex-col flex-grow hidden md:flex">
                                                     <p className="font-medium text-gray-800">Get your personalised playlist</p>
                                                     <p className="text-gray-500 text-sm">Made from your top 100 tracks</p>
                                                 </div>
                                                 <button
-                                                    className="rounded-md py-2 px-3 bg-green-500 text-white font-medium hover:bg-green-700"
+                                                    className="transition-all rounded-md py-2 px-3 bg-green-500 shadow-lg hover:shadow-xl hover:shadow-green-500/50 shadow-green-500/50 text-white font-medium w-full md:max-w-max"
                                                     onClick={() => console.log('')}
                                                 >
                                                     Create your playlist
