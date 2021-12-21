@@ -25,6 +25,7 @@ const removeExtraArtistAttributes = (artists) => {
 export const useSpotifyData = (accessToken) => {
     const requests = generateRequestData(accessToken)
 
+    const [loaded, setLoaded] = useState(false)
     const [data, setData] = useState({
         short_term: {
             tracks: {},
@@ -59,21 +60,20 @@ export const useSpotifyData = (accessToken) => {
     useEffect(() => {
         if (isUserDataLoading && isShortTermTracksLoading && isMediumTermTracksLoading && isLongTermTracksLoading && isShortTermArtistsLoading && isMediumTermArtistsLoading && isLongTermArtistsLoading) {
             let updatedData = Object.assign(data)
-            updatedData.short_term = {
-                tracks: removeExtraTrackAttributes(shortTermTracks.items),
-                artists: removeExtraArtistAttributes(shortTermArtists.items),
+            updatedData.tracks = {
+                short_term: removeExtraTrackAttributes(shortTermTracks.items),
+                medium_term: removeExtraTrackAttributes(mediumTermTracks.items),
+                long_term: removeExtraTrackAttributes(longTermTracks.items),
             }
-            updatedData.medium_term = {
-                tracks: removeExtraTrackAttributes(mediumTermTracks.items),
-                artists: removeExtraArtistAttributes(mediumTermArtists.items),
-            }
-            updatedData.long_term = {
-                tracks: removeExtraTrackAttributes(longTermTracks.items),
-                artists: removeExtraArtistAttributes(longTermArtists.items),
+            updatedData.artists = {
+                short_term: removeExtraArtistAttributes(shortTermArtists.items),
+                medium_term: removeExtraArtistAttributes(mediumTermArtists.items),
+                long_term: removeExtraArtistAttributes(longTermArtists.items),
             }
             setData(updatedData)
+            setLoaded(true)
         }
     }, [isUserDataLoading, isShortTermTracksLoading, isMediumTermTracksLoading, isLongTermTracksLoading, isShortTermArtistsLoading, isMediumTermArtistsLoading, isLongTermArtistsLoading])
 
-    return { data }
+    return { data, loaded }
 }
